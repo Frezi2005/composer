@@ -1,0 +1,19 @@
+* {
+    font-family: 'Roboto', sans-serif;
+}
+
+table, th, td, tr {
+    border-collapse: collapse;
+    border: 2px solid black;
+}
+
+td, tr {
+    padding: 5px;
+}
+
+table {
+    width: 650px;
+}
+
+
+
