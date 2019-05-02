@@ -18,6 +18,10 @@
     //$arrival = $departure + 6;
     $price = rand(100, 4000);
     //$flightTime = $faker->dateTimeBetween($startDate = '$departure', $endDate = '$arrival', $timezone = null);
+    $list = file_get_contents("airports.json");
+    $airportsList = json_decode($list, true);
+    $randCity = rand(0, count($airportsList) - 1);
+    var_dump($airportsList[$randCity]);
 
     function planeTicketGenerator($faker, $now, $price) {
 echo <<<END
@@ -42,7 +46,7 @@ echo <<<END
         </tr>
         <tr style="background-color: #93cfff;">
             <td colspan="2">Departure: $faker->date</td>
-            <td>Price: $price PLN</td>
+            <td>Price: $price $faker->currencyCode</td>
         </tr>
         <tr>
             <td>Flight with the airline: Ryanair</td>
