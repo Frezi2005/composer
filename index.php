@@ -32,30 +32,40 @@
     $airportsList = json_decode($list, true);
     $airport1 = rand(0, count($airportsList) - 1);
     $airport2 = rand(0, count($airportsList) - 1);
+    $tz = $airportsList[$airport2][tz];
+    //$arrivalTime = $faker->dateTime('now', $tz);
+    $airport1country = $airportsList[$airport1][country];
+    $airport2country = $airportsList[$airport2][country]
+    $airport1name = $airportsList[$airport1][name];
+    $airport2name = $airportsList[$airport2][name];
+    $airport1city = $airportsList[$airport1][city];
+    $airport2city = $airportsList[$airport2][city];
+    ob_start();
 
-    function planeTicketGenerator($faker, $price, $flightTime, $flightTimeOptional, $departure, $arrival, $departureOptional, $arrivalOptional, $airport1, $airport2, $airportsList) {
+
+    function planeTicketGenerator($faker, $price, $flightTime, $flightTimeOptional, $departure, $arrival, $departureOptional, $arrivalOptional, $airport1, $airport2, $airportsList, $arrivalTime) {
 echo <<<END
     <table>
         <tr style="background-color: #a8d8ff">
             <td colspan="3" style="text-align:left;">TICKETS IN REAL PRICE</td>
         </tr>
         <tr>
-            <td style="width:200px;"></td>
+            <td style="width:220px;"></td>
             <td><img src="BoeingLogo.png" alt="BoeingLogo" style="width:200px;"/></td>
             <td><img src="AirPlaneLogo.png" alt="AirPlaneLogo" style="width:200px;"/></td>
         </tr>
         <tr style="height:50px;background-color: #93cfff;">
 END;
-            print("<td>".$airportsList[$airport1][country].", ".$airportsList[$airport1][city]."</td>");
-            print("<td>".$airportsList[$airport2][country].", ".$airportsList[$airport2][city]."</td>");
+            print("<td>From: ".$airportsList[$airport1][country].", ".$airportsList[$airport1][city]."</td>");
+            print("<td>To: ".$airportsList[$airport2][country].", ".$airportsList[$airport2][city]."</td>");
+            //print("<td>Arrival time: ".$arrivalTime."</td>");
 echo <<<END
-            <td></td>
         </tr>
         <tr style="background-color: #93cfff;">
 END;
-
-            print("<td>".$airportsList[$airport1][name]."</td>");
-            print("<td>".$airportsList[$airport2][name]."</td>");
+            
+            print("<td>From: ".$airportsList[$airport1][name]."</td>");
+            print("<td>To: ".$airportsList[$airport2][name]."</td>");
             echo "<td>Price: $price $faker->currencyCode</td>
         </tr>
         <tr style='background-color: #93cfff;height:50px;'>";
@@ -73,25 +83,21 @@ echo <<<END
         </tr>
         <tr>
             <td>Flight with the airline: Ryanair</td>
-            <td colspan="2">Passenger surname: $faker->firstName $faker->lastName</td>
+            <td>Passenger surname: $faker->firstName $faker->lastName</td>
+            <td>Passenger adress: $faker->streetAddress</td>
         </tr>
     </table>
 END;
 
     }
 
-    planeTicketGenerator($faker, $price, $flightTime, $flightTimeOptional, $departure, $arrival, $departureOptional, $arrivalOptional, $airport1, $airport2, $airportsList);
+    planeTicketGenerator($faker, $price, $flightTime, $flightTimeOptional, $departure, $arrival, $departureOptional, $arrivalOptional, $airport1, $airport2, $airportsList, $arrivalTime);
+    $body = ob_get_contents();
+    $mpdf = new \Mpdf\Mpdf();
+    $mpdf->WriteHTML($body,\Mpdf\HTMLParserMode::HTML_BODY);
+    ob_end_clean();
+    $mpdf->Output('/home/kamil/Workspace/composer/pdf/ticket.pdf','F');
 
-    // $now
-    //     <br />
-    //     From: $faker->city To: $faker->city 
-    //     <br />
-    //     Departure: $faker->date Arrival: $faker->date
-    //     <br />
-    //     Name: $faker->firstName Surname: $faker->lastName
-    //     <br />
-    //     Adress: $faker->streetAddress
-    //     <br />
-    //     Price: $price
+    //https://www.pasazer.com/img/images/news-old/temp/myairline.jpg?fbclid=IwAR0nJ6o8-_lIYdPzNdvZIoH7doQArY_plv4Pc5uQMgor3GZIAkqSJcZpTKE
 ?>
 
